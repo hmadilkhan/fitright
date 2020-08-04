@@ -6,6 +6,21 @@
             <div class="gap no-gap signin whitish medium-opacity">
                 <div class="bg-image" style="background-image:url({{asset('public/images/resources/theme-bg.jpg')}})"></div>
                 <div class="container">
+                    @if ($errors->any())
+                    <div class="alert alert-danger gap-4" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li class="">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                        @if (session('message'))
+                            <div class="alert alert-{{session('class')}}" role="alert">
+                               <h3 class="justify-center">{{ session('message') }}</h3>
+                            </div>
+                        @endif
+
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="big-ad">
@@ -54,17 +69,11 @@
                         </div>
                         <div class="col-lg-4">
                             <div class="we-login-register">
-                                @if ($errors->any())
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li class="">{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
                                 <div class="form-title">
                                     <i class="fa fa-key"></i>login
                                     <span>sign in now and meet the awesome Friends around the world.</span>
                                 </div>
+
                                 <form class="we-form" method="post" action="{{ route('login') }}">
                                     @csrf
                                     <input type="email" id="email" name="email" placeholder="Email">

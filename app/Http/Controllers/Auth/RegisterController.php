@@ -62,12 +62,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'min:5', 'unique:timelines'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'gender' => ['required'],
-            'country' => ['required'],
-            'city' => ['required'],
             'birthday' => ['required'],
-            'interests' => ['required'],
-
-
         ]);
     }
 
@@ -103,10 +98,10 @@ class RegisterController extends Controller
             'verification_code' => Str::random(30),
             'remember_token'    => Str::random(10),
             'email_verified'    => null,
-            'country'           => $data['country'],
-            'city'           => $data['city'],
-            'birthday'           => date('Y-m-d', strtotime($data['birthday'])),
-            'interests'         => implode(', ', $data['interest'])
+            'country'           => '',
+            'city'              => '',
+            'birthday'          => date('Y-m-d', strtotime($data['birthday'])),
+            'interests'         => ''//implode(', ', $data['interest'])
         ]);
 
         //saving default settings to user settings
@@ -119,12 +114,7 @@ class RegisterController extends Controller
             'post_privacy'          => Setting::get('post_privacy'),
             'message_privacy'       => Setting::get('user_message_privacy'), ];
 
-//        return User::create([
-//            'name' => $data['name'],
-//            'email' => $data['email'],
-//            'password' => Hash::make($data['password']),
-//        ]);
-        return redirect('/login');
+        return redirect('/');
     }
 
     public function CreateUser(Request $request)
@@ -135,10 +125,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'min:5', 'unique:timelines'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'gender' => ['required'],
-            'country' => ['required'],
-            'city' => ['required'],
             'birthday' => ['required'],
-            'interests' => ['required'],
         ]);
 
         //Create timeline record for the user
@@ -158,10 +145,10 @@ class RegisterController extends Controller
             'verification_code' => Str::random(30),
             'remember_token'    => Str::random(10),
             'email_verified'    => null,
-            'country'           => $request->country,
-            'city'           => $request->city,
+            'country'           => '',
+            'city'           => '',
             'birthday'           => date('Y-m-d', strtotime($request->birthday)),
-            'interests'         => implode(', ', $request->interests)
+            'interests'         => ''//implode(', ', $request->interests)
         ]);
 
         //saving default settings to user settings
@@ -188,20 +175,20 @@ class RegisterController extends Controller
         $user = User::where('email', '=', $request->email)->where('verification_code', '=', $request->code)->first();
         if($user) {
             if ($user->email_verified) {
-                return Redirect::to('login')
-                    ->with('message',"Verified Mail.");
+                return Redirect::to('/')
+                    ->with(['message'=>"Email already verified. You can login now"]);
             } elseif ($user) {
                 $user->email_verified = 1;
                 $user->update();
-                return Redirect::to('login')
-                    ->with('message',"verified_mail_success.");
+                return Redirect::to('/')
+                    ->with(['message' => "Email Successfully Verified. You can login.",'class' => 'success']);
             } else {
                 echo trans('messages.invalid_verification');
             }
         }
         else{
-            return Redirect::to('login')
-                ->with('message', trans('Email or verfication code is not valid.'));
+            return Redirect::to('/')
+                ->with(['message' => "Email or verfication code is not valid.",'class' => 'danger']);
         }
     }
 }

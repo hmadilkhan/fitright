@@ -187,4 +187,9 @@ class PostController extends Controller
 
         }
 
+        public function Profile(Request $request)
+        {
+            return view('profile');
+        }
+
 }

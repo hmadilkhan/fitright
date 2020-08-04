@@ -24,12 +24,12 @@
         Route::post('post-comment', 'PostController@postcomment');
         Route::post('like-comment', 'PostController@likeComment');
         Route::post('like-post', 'PostController@likePost');
+        Route::get('profile', 'PostController@Profile');
 
 
     });
+    //Register
     Route::post('/register','Auth\RegisterController@CreateUser');
-
-
     // Get Cities
     Route::get('/cities', 'CityController@getCitiesById');
     // Email Verification

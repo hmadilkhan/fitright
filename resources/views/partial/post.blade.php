@@ -18,7 +18,7 @@
                         </ul>
                     </div>
                 </div>
-                <ins><a href="time-line.html" title="">{{session('name')}}</a> Post Album</ins>
+                <ins><a href="time-line.html" title="">{{$post->user->name}}</a> Post Album</ins>
                 <span><i class="fa fa-globe"></i> published: {{Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</span>
             </div>
             <div class="post-meta">

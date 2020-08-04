@@ -26,7 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         $username = Timeline::where('id',session('timelineID'))->get();
-        $posts = Post::orderBy('created_at','DESC')->where('active',1)->get();
+        $posts = Post::orderBy('created_at','DESC')->where(['active'=> 1])->get();
         return view('home',compact('username','posts'));
     }
 }
