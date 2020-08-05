@@ -25,6 +25,9 @@
         Route::post('like-comment', 'PostController@likeComment');
         Route::post('like-post', 'PostController@likePost');
         Route::get('profile', 'PostController@Profile');
+        Route::post('change-cover', 'PostController@changeCover');
+        Route::post('change-avatar', 'PostController@changeAvatar');
+        Route::post('update-profile', 'PostController@editProfile');
 
 
     });

@@ -15,7 +15,7 @@
             </form>
         </div>
         <div class="page-name">
-            <span>Newsfeed1</span>
+            <span>Newsfeed</span>
         </div>
         <ul class="setting-area">
             <li><a href="newsfeed.html" title="Home" data-ripple=""><i class="fa fa-home"></i></a></li>
@@ -584,6 +584,7 @@
                 </ul>
             </li>
             <li><a class="" href="#" title=""><i class="fa fa-repeat"></i> Timeline</a>
+                <ul>
                 <ul>
                     <li><a href="timeline.html" title="">Timeline</a></li>
                     <li><a href="timeline-photos.html" title="">Timeline Photos</a></li>

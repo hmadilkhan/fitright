@@ -189,7 +189,104 @@ class PostController extends Controller
 
         public function Profile(Request $request)
         {
-            return view('profile');
+            $user = User::where('id',session('userid'))->get();
+
+
+            return view('profile',compact('user'));
+        }
+
+        public function changeCover(Request $request)
+        {
+
+            if ($files = $request->file('cover')) {
+
+                $ImageName =  "image-".time().'.'.$request->file('cover')->getClientOriginalName();
+                $request->file('cover')->storeAs('images/posts/', $ImageName);
+
+
+//                list($width, $height) = getimagesize($request->file('cover')->getRealPath());
+//
+//                $avatar = Image::make($request->file('cover')->getRealPath());
+//
+//                if ($width > $height) {
+//                    $avatar->crop($height, $height);
+//                } else {
+//                    $avatar->crop($width, $width);
+//                }
+
+//                $avatar->save(storage_path('app/images/cover/'.$ImageName), 60);
+
+                $media = Media::create([
+                    'title'  => $ImageName,
+                    'type'   => 'image',
+                    'source' => $ImageName,
+                ]);
+
+                $timeline = Timeline::where('id', session('timelineID'))->first();
+                $timeline->cover_id = $media->id;
+
+                if ($timeline->save()) {
+                    return response()->json(['status' => '200', 'cover_url' => url('app/images/cover/'.$ImageName), 'message' => trans('messages.update_cover_success')]);
+                }
+
+            }
+            else{
+                return response()->json(['status' => '201', 'message' => trans('messages.update_cover_failed')]);
+            }
+        }
+
+        public function changeAvatar(Request $request)
+        {
+            if ($files = $request->file('avatar')) {
+
+                $ImageName =  "image-".time().'.'.$request->file('avatar')->getClientOriginalName();
+
+                list($width, $height) = getimagesize($request->file('avatar')->getRealPath());
+
+                $avatar = Image::make($request->file('avatar')->getRealPath());
+
+                if ($width > $height) {
+                    $avatar->crop($height, $height);
+                } else {
+                    $avatar->crop($width, $width);
+                }
+
+                $avatar->save(public_path('public/avatar/'.$ImageName), 60);
+
+                $media = Media::create([
+                    'title'  => $ImageName,
+                    'type'   => 'image',
+                    'source' => $ImageName,
+                ]);
+
+                $timeline = Timeline::where('id', session('timelineID'))->first();
+                $timeline->avatar_id = $media->id;
+
+                if ($timeline->save()) {
+                    return response()->json(['status' => '200', 'avatar_url' => url('app/images/avatar/'.$ImageName), 'message' => trans('messages.update_cover_success')]);
+                }
+
+            }
+            else{
+                return response()->json(['status' => '201', 'message' => trans('messages.update_cover_failed')]);
+            }
+        }
+
+        public function editProfile(Request $request)
+        {
+            $user = User::where('id',session('userid'))->first();
+
+            $user->gender = $request->gender;
+            $user->country = $request->country;
+            $user->city = $request->city;
+
+            if($user->save()){
+                $timeline = Timeline::where('id', session('timelineID'))->first();
+                $timeline->name = $request->name;
+                $timeline->username = $request->username;
+                $timeline->about = $request->about;
+                $timeline->save();
+            }
         }
 
 }

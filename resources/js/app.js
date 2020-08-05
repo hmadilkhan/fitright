@@ -50,28 +50,9 @@ var imagesPreview = function(input, placeToInsertImagePreview) {
 
 };
 
-$('#cover').on('change', function() {
-    alert();
-    imagesPreview(this, '#imgPreviews');
-});
 
-var imagesPreview = function(input, placeToInsertImagePreview) {
 
-    if (input.files) {
-        var filesAmount = input.files.length;
 
-        for (i = 0; i < filesAmount; i++) {
-            var reader = new FileReader();
-
-            reader.onload = function(event) {
-                $($.parseHTML('<img width="100" height="100" style="margin-right: 20px">')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-            }
-
-            reader.readAsDataURL(input.files[i]);
-        }
-    }
-
-};
 
 
 
