@@ -50,6 +50,10 @@ var imagesPreview = function(input, placeToInsertImagePreview) {
 
 };
 
+$('#profileCancel').click(function (){
+   alert();
+});
+
 
 
 

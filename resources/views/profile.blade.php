@@ -19,7 +19,7 @@
                                             </label>
                                         </div>
                                     </form>
-                                    <img src="{{asset("public/avatar/image-1596650822.2019-lamborghini-huracan-evo-spyder-5k-p6-1920x1080.jpg")}}" alt="" style="width:100%;height: 340px;">
+                                    <img id="imgCover" src="{{asset('storage/app/images/cover/'.$user->cover)}}" alt="" style="width:100%;height: 340px;">
                                     <ul class="profile-controls">
                                         <li><a href="#" title="Add friend" data-toggle="tooltip"><i class="fa fa-user-plus"></i></a></li>
                                         <li><a href="#" title="Follow" data-toggle="tooltip"><i class="fa fa-star"></i></a></li>
@@ -45,7 +45,7 @@
                                         <div class="col-lg-2 col-md-3">
                                             <div class="profile-author">
                                                 <div class="profile-author-thumb">
-                                                    <img alt="author" src="{{asset("public/avatar/image-1596650822.2019-lamborghini-huracan-evo-spyder-5k-p6-1920x1080.jpg")}}">
+                                                    <img alt="author" id="imgAvatar" src="{{asset('storage/app/images/avatar/'.$user->avatar)}}">
                                                     <!-- AVATAR -->
                                                     <form class="change-avatar-form" action="{{ url('change-avatar') }}" method="post" enctype="multipart/form-data" id="avatarForm">
                                                         @csrf
@@ -209,32 +209,32 @@
 
                                                     </div>
                                                     <div class="stg-form-area">
-                                                        <form method="post" class="c-form" action="{{url('update-profile')}}">
+                                                        <form method="post" class="c-form" action="{{url('update-profile')}}" id="EditProfile">
                                                             @csrf
                                                             <div>
                                                                 <label>Display Name</label>
-                                                                <input type="text" id="name" name="name" placeholder="Jack Carter" value="{{$user[0]->name}}">
+                                                                <input type="text" id="name" name="name" placeholder="Jack Carter" value="{{$user->timeline->name}}">
                                                             </div>
 
                                                             <div class="uzer-nam">
                                                                 <label>User Name</label>
-                                                                <span>www.pitnik.com/</span><input id="username" name="username" type="text" placeholder="jackcarter4023" value="{{$user[0]->username}}">
+                                                                <span>www.pitnik.com/</span><input id="username" name="username" type="text" placeholder="jackcarter4023" value="{{$user->timeline->username}}">
                                                             </div>
                                                             <div>
                                                                 <label>Email Address</label>
-                                                                <input type="text" placeholder="abc@pitnikmail.com" id="email" name="email" value="{{$user[0]->email}}">
+                                                                <input type="text" placeholder="abc@pitnikmail.com" id="email" name="email" value="{{$user->email}}">
                                                             </div>
                                                             <div>
                                                                 <label>Gender</label>
                                                                 <div class="form-radio">
                                                                     <div class="radio">
                                                                         <label>
-                                                                            <input type="radio" {{$user[0]->gender == "male" ? 'checked="checked"' : '' }}  name="radio"><i class="check-box"></i>Male
+                                                                            <input type="radio" {{$user->gender == "male" ? 'checked="checked"' : '' }} value="male"  name="gender"><i class="check-box"></i>Male
                                                                         </label>
                                                                     </div>
                                                                     <div class="radio">
                                                                         <label>
-                                                                            <input type="radio" {{$user[0]->gender == "female" ? 'checked="checked"' : '' }} name="radio"><i class="check-box"></i>Female
+                                                                            <input type="radio" {{$user->gender == "female" ? 'checked="checked"' : '' }} value="female" name="gender"><i class="check-box"></i>Female
                                                                         </label>
                                                                     </div>
 
@@ -242,32 +242,42 @@
                                                             </div>
                                                             <div>
                                                                 <label>about your profile</label>
-                                                                <textarea rows="3" id="about" name="about" placeholder="write someting about yourself">{{$user[0]->about}}</textarea>
+                                                                <textarea rows="3" id="about" name="about" placeholder="write someting about yourself">{{$user->timeline->about}}</textarea>
                                                             </div>
                                                             <div>
                                                                 <label>Country</label>
                                                                 <select id="country" name="country" >
                                                                     <option value="" disabled selected>Select Country</option>
                                                                     @foreach(\App\Country::all() as $value)
-                                                                        <option {{$user[0]->country == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->name}}</option>
+                                                                        <option {{$user->country == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->name}}</option>
                                                                     @endforeach
                                                                 </select>
-
-
-
                                                             </div>
                                                             <div>
                                                                 <label>City</label>
                                                                 <select id="city" name="city"  class="selectpicker" data-style="btn-primary">
                                                                     <option value="" disabled selected>Select City</option>
                                                                     @foreach(\App\City::all() as $value)
-                                                                        <option {{$user[0]->city == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->city_name}}</option>
+                                                                        <option {{$user->city == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->city_name}}</option>
                                                                     @endforeach
 
                                                                 </select>
                                                             </div>
                                                             <div>
-                                                                <button type="submit" data-ripple="">Cancel</button>
+                                                                <label>Interests</label>
+                                                                <select multiple id="interests" name="interests[]">
+                                                                    <?php $var = explode(',',$user->interests); ?>
+                                                                    <option value="" disabled selected>Choose Your Interests</option>
+                                                                    @foreach(\App\Interest::all() as $value)
+                                                                        @foreach($var as $row)
+
+                                                                            <option {{$row == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->name}}</option>
+                                                                        @endforeach
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div>
+                                                                <button type="button" id="profileCancel" data-ripple="">Cancel</button>
                                                                 <button type="submit" data-ripple="">Save</button>
                                                             </div>
                                                         </form>
@@ -633,6 +643,7 @@
 
 @section('script')
     <script type="text/javascript">
+
         $(document).on('change','.change-cover-input',function(e){
             e.preventDefault();
             $("#coverForm").trigger('submit');
@@ -656,7 +667,8 @@
                 },
                 success:function(data)
                 {
-                    console.log(data)
+                    $('#imgCover').attr('src','{{asset('storage/app/images/cover/')}}'+"/"+data.cover);
+                    notify("Cover Successfully Uploaded");
                 }
             });
         });
@@ -683,10 +695,62 @@
                 },
                 success:function(data)
                 {
-                    console.log(data)
+                    $('#imgAvatar').attr('src','{{asset('storage/app/images/avatar/')}}'+"/"+data.avatar);
+                    notify("Avatar Successfully Uploaded");
                 }
             });
         });
+
+        $('#EditProfile').submit(function (e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url:"{{url('update-profile')}}",
+                method:"POST",
+                data:formData,
+                cache:false,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    // setting a timeout
+                },
+                success:function(data)
+                {
+                    if (data.status == 200){
+                        notify(data.message);
+                    }else{
+                        error(data.message);
+                    }
+
+                }
+            });
+        })
+
+        function notify(msg)
+        {
+            $.toast({
+                heading: msg,
+                text: '',
+                showHideTransition: 'slide',
+                icon: 'success',
+                loaderBg: '#fa6342',
+                position: 'bottom-right',
+                hideAfter: 3000,
+            });
+        }
+
+        function error(msg)
+        {
+            $.toast({
+            	heading: 'Error',
+            	text: msg,
+            	showHideTransition: 'fade',
+            	icon: 'error',
+            	hideAfter: 7000,
+            	loaderBg: '#fa6342',
+            	position: 'bottom-right',
+            });
+        }
 
 
     </script>

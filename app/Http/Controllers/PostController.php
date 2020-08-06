@@ -189,9 +189,8 @@ class PostController extends Controller
 
         public function Profile(Request $request)
         {
-            $user = User::where('id',session('userid'))->get();
-
-
+            $user = User::find(session('userid'));//User::where('id',session('userid'))->get();
+//            return $user->avatar;
             return view('profile',compact('user'));
         }
 
@@ -200,8 +199,8 @@ class PostController extends Controller
 
             if ($files = $request->file('cover')) {
 
-                $ImageName =  "image-".time().'.'.$request->file('cover')->getClientOriginalName();
-                $request->file('cover')->storeAs('images/posts/', $ImageName);
+                $ImageName =  "image-".time().'.'.$request->file('cover')->getClientOriginalExtension();
+                $request->file('cover')->storeAs('images/cover/', $ImageName);
 
 
 //                list($width, $height) = getimagesize($request->file('cover')->getRealPath());
@@ -226,7 +225,7 @@ class PostController extends Controller
                 $timeline->cover_id = $media->id;
 
                 if ($timeline->save()) {
-                    return response()->json(['status' => '200', 'cover_url' => url('app/images/cover/'.$ImageName), 'message' => trans('messages.update_cover_success')]);
+                    return response()->json(['status' => '200', 'cover' => $ImageName, 'message' => trans('messages.update_cover_success')]);
                 }
 
             }
@@ -239,7 +238,7 @@ class PostController extends Controller
         {
             if ($files = $request->file('avatar')) {
 
-                $ImageName =  "image-".time().'.'.$request->file('avatar')->getClientOriginalName();
+                $ImageName =  "image-".time().'.'.$request->file('avatar')->getClientOriginalExtension();
 
                 list($width, $height) = getimagesize($request->file('avatar')->getRealPath());
 
@@ -251,7 +250,7 @@ class PostController extends Controller
                     $avatar->crop($width, $width);
                 }
 
-                $avatar->save(public_path('public/avatar/'.$ImageName), 60);
+                $avatar->save(storage_path('app/images/avatar/'.$ImageName), 60);
 
                 $media = Media::create([
                     'title'  => $ImageName,
@@ -263,7 +262,7 @@ class PostController extends Controller
                 $timeline->avatar_id = $media->id;
 
                 if ($timeline->save()) {
-                    return response()->json(['status' => '200', 'avatar_url' => url('app/images/avatar/'.$ImageName), 'message' => trans('messages.update_cover_success')]);
+                    return response()->json(['status' => '200', 'avatar' => $ImageName, 'message' => trans('messages.update_cover_success')]);
                 }
 
             }
@@ -279,6 +278,7 @@ class PostController extends Controller
             $user->gender = $request->gender;
             $user->country = $request->country;
             $user->city = $request->city;
+            $user->interests = implode(",",$request->interests);
 
             if($user->save()){
                 $timeline = Timeline::where('id', session('timelineID'))->first();
@@ -286,6 +286,9 @@ class PostController extends Controller
                 $timeline->username = $request->username;
                 $timeline->about = $request->about;
                 $timeline->save();
+                return response()->json(['status' => '200','message' => 'Profile Updated Successfully']);
+            }else{
+                return response()->json(['status' => '201','message' => 'Profile Updated Failed']);
             }
         }
 

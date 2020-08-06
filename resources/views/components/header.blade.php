@@ -1,6 +1,6 @@
 <div class="topbar stick">
     <div class="logo">
-        <a title="" href="newsfeed.html"><img src="{{asset('public/images/logo.png')}}" alt=""></a>
+        <a title="" href="{{url('/home')}}"><img src="{{asset('public/images/logo.png')}}" alt=""></a>
     </div>
     <div class="top-area">
         <div class="main-menu">
@@ -517,7 +517,7 @@
         </ul>
         <div class="user-img">
             <h5>{{$name}}</h5>
-            <img src="{{asset('public/images/resources/admin.jpg')}}" alt="">
+            <img width="45" height="45" src="{{(session('user')->avatar ? asset('storage/app/images/avatar/'.session('user')->avatar) : "asset(\'public/images/resources/admin.jpg')")}}" alt="">
             <span class="status f-online"></span>
             <div class="user-setting">
                 <span class="seting-title">Chat setting <a href="#" title="">see all</a></span>

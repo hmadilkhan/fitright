@@ -13,7 +13,7 @@
         @else
             <li>
                 <div class="comet-avatar">
-                    <img src="{{asset('public/images/resources/nearly3.jpg')}}" alt="">
+                    <img src="{{($post->getAvatar($comment->user_id) ? asset('storage/app/images/avatar/'.$post->getAvatar($comment->user_id)) : asset('public/images/resources/nearly3.jpg'))}}" alt="">
                 </div>
                 <div class="we-comment">
                     <h5><a href="time-line.html" title="">{{ $comment->user->name }}</a></h5>
@@ -23,7 +23,7 @@
                         <a class="we-reply" id="reply{{$comment->id}}" onclick="showCommentBoxForReply('{{$comment->id}}')" title="Reply"><i class="fa fa-reply"></i></a>
 
                         <a  onclick="like('{{$comment->id}}')" title=""><i id="iconColor{{$comment->id}}" class="fa fa-heart {{$comment->comments_liked->contains(Auth::user()->id) ? 'text-danger' : ''}}"></i><span id="likeCount{{$comment->id}}">{{$comment->comments_liked()->count()}}</span></a>
-                    </div>
+                </div>
                     <!-- SECTION START FOR REPLY -->
                     <div id="commentArea{{$comment->id}}" class="coment-area" style="display: none;">
 

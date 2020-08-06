@@ -135,7 +135,7 @@ trait AuthenticatesUsers
             return redirect('/')->with(['message'=>"Please verify you email.",'class'=>'danger']);
         }else{
             $userName = Timeline::where('id',$user->timeline_id)->get();
-            session(['userid' => $user->id ,'timelineID' => $user->timeline_id,'name' => $userName[0]->name ]);
+            session(['userid' => $user->id ,'timelineID' => $user->timeline_id,'name' => $userName[0]->name,'user' => $user ]);
 
             return redirect('/home');
         }

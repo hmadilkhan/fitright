@@ -12,7 +12,7 @@
     <span class="create-post">Create post</span>
     <div class="new-postbox">
         <figure>
-            <img src="{{asset('public/images/resources/admin.jpg')}}" alt="">
+            <img width="45" height="45" src="{{(session('user')->avatar ? asset('storage/app/images/avatar/'.session('user')->avatar) : asset('public/images/resources/admin.jpg'))}}" alt="">
         </figure>
         <div class="newpst-input">
 

@@ -80,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarAttribute($value)
     {
-        return $this->timeline->avatar ? url('user/avatar/'.$this->timeline->avatar->source) : url('user/avatar/default-'.$this->gender.'-avatar.png');
+        return $this->timeline->avatar ? $this->timeline->avatar->source : url('user/avatar/default-'.$this->gender.'-avatar.png');
     }
 
     /**
@@ -117,7 +117,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPictureAttribute($value)
     {
-        return $this->timeline->avatar ? url('user/avatar/'.$this->timeline->avatar->source) : url('group/avatar/default-group-avatar.png');
+        return $this->timeline->avatar ? $this->timeline->avatar->source : url('group/avatar/default-group-avatar.png');
     }
 
     public function toArray()

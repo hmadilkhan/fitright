@@ -98,12 +98,13 @@
 
                                         <div id="newposts"></div>
 
+
                                         @foreach($posts as $post)
                                             <div class="central-meta item">
                                             <div class="user-post">
                                                 <div class="friend-info">
                                                     <figure>
-                                                        <img src="{{asset('public/images/resources/nearly1.jpg')}}" alt="">
+                                                        <img width="60" height="60" src="{{($post->getAvatar($post->user_id) != "" ? asset('storage/app/images/avatar/'.$post->getAvatar($post->user_id))  : asset('public/images/resources/nearly1.jpg'))}}" alt="">
                                                     </figure>
                                                     <div class="friend-name">
                                                         <div class="more">
@@ -200,7 +201,7 @@
                                                             @foreach($post->comments()->get() as $commentData)
                                                             <li class="reply{{$post->id}}">
                                                                 <div class="comet-avatar">
-                                                                    <img src="{{asset('public/images/resources/nearly3.jpg')}}" alt="">
+                                                                    <img src="{{($post->getAvatar($commentData->user_id) ? asset('storage/app/images/avatar/'.$post->getAvatar($commentData->user_id)) : asset('public/images/resources/nearly3.jpg'))}}" alt="">
                                                                 </div>
                                                                 <div class="we-comment">
                                                                     <h5><a href="time-line.html" title="">{{ $commentData->user->name }}</a></h5>
@@ -218,15 +219,26 @@
                                                                             @if($commentData->replies()->count() > 0)
                                                                             @foreach($commentData->replies as $reply)
                                                                             <li>
-                                                                                <div class="we-comment">
-                                                                                    <h5><a href="time-line.html" title="">{{ $reply->user->name }}</a></h5>
-                                                                                    <p>{{$reply->description}}</p>
-                                                                                    <div class="inline-itms">
-                                                                                        <span>{{Carbon\Carbon::parse($reply->created_at)->diffForHumans() }}</span>
-                                                                                        <a class="we-reply" id="reply{{$commentData->id}}" onclick="showCommentBoxForReply('{{$commentData->parent_id}}')" title="Reply"><i class="fa fa-reply"></i></a>
-                                                                                        <a  onclick="like('{{$reply->id}}')" title=""><i id="iconColor{{$reply->id}}" class="fa fa-heart {{$reply->comments_liked->contains(Auth::user()->id) ? 'text-danger' : ''}}"></i><span id="likeCount{{$reply->id}}">{{$reply->comments_liked()->count()}}</span></a>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-1">
+                                                                                        <div class="comet-avatar">
+                                                                                            <img src="{{($post->getAvatar($commentData->user_id) ? asset('storage/app/images/avatar/'.$post->getAvatar($commentData->user_id)) : asset('public/images/resources/nearly3.jpg'))}}" alt="">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-sm-11">
+                                                                                        <div class="we-comment">
+                                                                                            <h5><a href="time-line.html" title="">{{ $reply->user->name }}</a></h5>
+                                                                                            <p>{{$reply->description}}</p>
+                                                                                            <div class="inline-itms">
+                                                                                                <span>{{Carbon\Carbon::parse($reply->created_at)->diffForHumans() }}</span>
+                                                                                                <a class="we-reply" id="reply{{$commentData->id}}" onclick="showCommentBoxForReply('{{$commentData->parent_id}}')" title="Reply"><i class="fa fa-reply"></i></a>
+                                                                                                <a  onclick="like('{{$reply->id}}')" title=""><i id="iconColor{{$reply->id}}" class="fa fa-heart {{$reply->comments_liked->contains(Auth::user()->id) ? 'text-danger' : ''}}"></i><span id="likeCount{{$reply->id}}">{{$reply->comments_liked()->count()}}</span></a>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+
+
                                                                             </li>
                                                                             @endforeach
                                                                             @endif
@@ -278,7 +290,7 @@
 
                                                             <li class="post-comment">
                                                                 <div class="comet-avatar">
-                                                                    <img src="{{asset('public/images/resources/nearly1.jpg')}}" alt="">
+                                                                    <img src="{{($post->getAvatar($commentData->user_id) ? asset('storage/app/images/avatar/'.$post->getAvatar($commentData->user_id)) : asset('public/images/resources/nearly3.jpg'))}}" alt="">
                                                                 </div>
                                                                 <div class="post-comt-box">
                                                                     <form method="post" action="" >
