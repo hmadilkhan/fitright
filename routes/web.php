@@ -28,7 +28,16 @@
         Route::post('change-cover', 'PostController@changeCover');
         Route::post('change-avatar', 'PostController@changeAvatar');
         Route::post('update-profile', 'PostController@editProfile');
+        Route::post('update-settings', 'PostController@editSettings');
+        Route::post('update-notification', 'PostController@editNotification');
 
+        //Getting Profile Views
+        Route::get('/timeline','PostController@getTimeline');
+        Route::get('/about','PostController@getAbout');
+        Route::get('/setting','PostController@getSettings');
+        Route::get('/friends','PostController@getFriends');
+        Route::get('/photos','PostController@getPhotos');
+        Route::get('/videos','PostController@getVideos');
 
     });
     //Register

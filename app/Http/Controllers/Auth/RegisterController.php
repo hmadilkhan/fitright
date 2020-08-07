@@ -9,6 +9,7 @@ use App\Timeline;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -160,6 +161,9 @@ class RegisterController extends Controller
             'timeline_post_privacy' => 'no',
             'post_privacy'          => 'no',
             'message_privacy'       => 'no', ];
+
+        //Create a record in user settings table.
+        $userSettings = DB::table('user_settings')->insert($user_settings);
 
         Mail::send('emails.welcome', ['user' => $user], function ($m) use ($user) {
             $m->from('noreply@fitrights.com', 'Fitrights');

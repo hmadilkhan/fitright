@@ -21,6 +21,7 @@ class UserSettings extends Migration
             $table->string('post_privacy', 15);
             $table->string('confirm_follow', 15);
             $table->string('timeline_post_privacy', 15);
+            $table->string('message_privacy', 15);
             $table->string('email_follow', 15)->default('no');
             $table->string('email_like_post', 15)->default('no');
             $table->string('email_post_share', 15)->default('no');

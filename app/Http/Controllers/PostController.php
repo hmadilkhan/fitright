@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Response;
 use Alaouy\Youtube\Facades\Youtube;
 use App\Album;
@@ -26,7 +27,6 @@ use App\Timeline;
 use App\User;
 use App\Wallpaper;
 use Carbon\Carbon;
-use DB;
 use Flash;
 use Flavy;
 use Illuminate\Support\Facades\Config;
@@ -190,8 +190,8 @@ class PostController extends Controller
         public function Profile(Request $request)
         {
             $user = User::find(session('userid'));//User::where('id',session('userid'))->get();
-//            return $user->avatar;
-            return view('profile',compact('user'));
+            $user_settings = $user->getUserSettings(session('userid'));
+            return view('profile',compact('user','user_settings'));
         }
 
         public function changeCover(Request $request)
@@ -291,5 +291,85 @@ class PostController extends Controller
                 return response()->json(['status' => '201','message' => 'Profile Updated Failed']);
             }
         }
+
+        public function editSettings(Request $request)
+        {
+            $user_settings = DB::table('user_settings')->where('user_id',session('userid'))->get();
+            if(count($user_settings)){
+                $fields = [
+                    'comment_privacy' =>$request->comments,
+                    'follow_privacy' =>$request->follow,
+                    'post_privacy' =>$request->post_privacy,
+                    'confirm_follow' =>$request->confirm,
+                    'timeline_post_privacy' =>$request->post_timeline,
+                    'message_privacy' =>$request->message,
+                ];
+                if(DB::table('user_settings')->where('user_id',session('userid'))->update($fields))
+                {
+                    return response()->json(['status' => '200','message' => 'Settings Updated Successfully']);
+                }
+                else
+                {
+                    return response()->json(['status' => '201','message' => 'Settings Updation Failed']);
+                }
+            }
+        }
+
+    public function editNotification(Request $request)
+    {
+        $user_settings = DB::table('user_settings')->where('user_id',session('userid'))->get();
+        if(count($user_settings)){
+            $fields = [
+                'email_follow' =>($request->email_follow == "" ? 'off' : $request->email_follow),
+                'email_like_post' =>($request->email_like_post == "" ? 'off' : $request->email_like_post),
+                'email_post_share' =>($request->email_post_share == "" ? 'off' : $request->email_post_share),
+                'email_comment_post' =>($request->email_comment_post == "" ? 'off' : $request->email_comment_post),
+                'email_like_comment' =>($request->email_like_comment == "" ? 'off' : $request->email_like_comment),
+                'email_reply_comment' =>($request->email_reply_comment == "" ? 'off' : $request->email_reply_comment),
+                'email_join_group' =>($request->email_join_group == "" ? 'off' : $request->email_join_group),
+                'email_like_page' =>($request->email_like_page == "" ? 'off' : $request->email_like_page),
+            ];
+            if(DB::table('user_settings')->where('user_id',session('userid'))->update($fields))
+            {
+                return response()->json(['status' => '200','message' => 'Email Notifications Updated Successfully']);
+            }
+            else
+            {
+                return response()->json(['status' => '201','message' => 'Email Notifications Updation Failed']);
+            }
+        }
+    }
+
+    public function getTimeline()
+    {
+        return view('partial.profile.timeline');
+    }
+
+    public function getAbout()
+    {
+        return view('partial.profile.about');
+    }
+
+    public function getFriends()
+    {
+        return view('partial.profile.friends');
+    }
+
+    public function getPhotos()
+    {
+        return view('partial.profile.photos');
+    }
+
+    public function getVideos()
+    {
+        return view('partial.profile.videos');
+    }
+
+    public function getSettings()
+    {
+        $user = User::find(session('userid'));//User::where('id',session('userid'))->get();
+        $user_settings = $user->getUserSettings(session('userid'));
+        return view('partial.profile.settings',compact('user','user_settings'));
+    }
 
 }
